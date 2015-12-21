@@ -22,7 +22,7 @@ Usage
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$router = new Tez\Router\Collector();
+$router = new Tez\Router();
 
 $router->get('/', 'HomeCtrl@index');
 
@@ -48,7 +48,7 @@ $route = $router->match($path);
 
 if ($route !== false) {
     if ($route->isAllowed($_SERVER['REQUEST_METHOD'])) {
-        $dispatcher = new Tez\Router\Dispatcher();
+        $dispatcher = new Tez\Dispatcher();
         echo $dispatcher->dispatch($route);
     } else {
         header('HTTP/1.0 405 Method Not Allowed');
