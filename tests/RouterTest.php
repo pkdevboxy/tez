@@ -1,6 +1,5 @@
 <?php
 
-use Vaibhav\Tez\Route;
 use Vaibhav\Tez\Router;
 
 class RouterTest extends PHPUnit_Framework_TestCase

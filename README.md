@@ -20,8 +20,6 @@ Usage
 ```php
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
 $router = new Vaibhav\Tez\Router();
 
 $router->get('/', 'IndexCtrl@index');
