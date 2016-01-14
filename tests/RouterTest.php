@@ -12,7 +12,8 @@ class RouterTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->router = new Router();
-        $this->router->get('/', function () {
+        $this->router->get('/', function ()
+        {
             return 'Home';
         }, 'home');
         $this->router->get('/hello/{name}', function ($name)

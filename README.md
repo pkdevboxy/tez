@@ -1,5 +1,5 @@
 # vaibhavpandeyvpz/tez
-Clean & lightweight regex-based router implementation in PHP with support for reverse URL generation.
+Framework agnostic, lightweight regex-based router implementation in PHP with support for reverse URL generation.
 
 [![Build Status](https://img.shields.io/travis/vaibhavpandeyvpz/tez/master.svg?style=flat-square)](https://travis-ci.org/vaibhavpandeyvpz/tez)
 
@@ -9,35 +9,62 @@ Install
 composer require vaibhavpandeyvpz/tez
 ```
 
-Testing
-------
-``` bash
-vendor/bin/phpunit
-```
-
-Usage
+Routing
 ------
 ```php
 $router = new Vaibhav\Tez\Router();
 
-$router->get('/', 'IndexCtrl@index');
-
-$router->group('/user', function ()
+$router->get('/', function ()
 {
-    /** @var Vaibhav\Tez\Router $this */
-    $this->get('/{name}', function ($name)
-    {
-        return sprintf('Hello %s!', $name);
-    }, 'home');
+    return 'Home';
+}, 'home');
 
-    $this->get('/{name}/{no:[0-9]+}', function ($name, $no)
+$router->get('/hello/{name}', function ($name)
+{
+    return sprintf('Hello %s!', $name);
+}, 'hello');
+
+$router->get('/hello/{name}/{num:[0-9]+}', function ($name, $no)
+{
+    return sprintf('Hello %s. You are no. %d!', $name, $no);
+}, 'hello-2');
+
+$router->group('/group', function ()
+{
+    /**
+     * Group
+     *
+     * @var $this Router
+     */
+    $this->get('/', function () {}, 'g-home');
+    $this->get('/one/{name}', function () {}, 'g-one');
+    $this->get('/two/{name}', function () {}, 'g-two');
+    $this->group('/sub', function ()
     {
-        return sprintf('Hello %s. You are no. %d!', $name, $no);
+        /**
+         * Nested group
+         *
+         * @var $this Router
+         */
+        $this->get('/', function () {}, 'sg-home');
+        $this->get('/one/{name}', function () {}, 'sg-one');
+        $this->get('/two/{name}', function () {}, 'sg-two');
     });
 });
+```
 
-// $path = $router->generate('home', ['name' => 'me']);
+Generation
+------
+```php
+$path = $router->generate('hello-2', [
+    'name' => 'me',
+    'no' => 1
+]);
+```
 
+Dispatching
+------
+```php
 $path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
 
 $route = $router->match($path);

@@ -7,7 +7,7 @@
     "autoload-dev": {
         "classmap": ["tests"]
     },
-    "description": "Clean & lightweight regex-based router implementation in PHP with support for reverse URL generation.",
+    "description": "Framework agnostic, lightweight regex-based router implementation in PHP with support for reverse URL generation.",
     "keywords": ["modular", "minimal", "router", "routing", "tiny"],
     "license": "MIT",
     "name": "vaibhavpandeyvpz/tez",
