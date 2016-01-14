@@ -18,8 +18,6 @@ vendor/bin/phpunit
 Usage
 ------
 ```php
-<?php
-
 $router = new Vaibhav\Tez\Router();
 
 $router->get('/', 'IndexCtrl@index');
@@ -44,7 +42,7 @@ $path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
 
 $route = $router->match($path);
 
-if ($route !== false) {
+if ($route !== null) {
     if ($route->allows($_SERVER['REQUEST_METHOD'])) {
         $dispatcher = new Vaibhav\Tez\Dispatcher();
         echo $dispatcher->dispatch($route);
