@@ -1,37 +1,37 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
     <title>Tez by vaibhavpandeyvpz</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
+
+    <header>
+      <div class="container">
         <h1>Tez</h1>
-        <p>Clean &amp; lightweight regex-based router implementation in PHP with support for reverse URL generation.</p>
+        <h2>Framework agnostic, lightweight regex-based router implementation in PHP with support for reverse URL generation.</h2>
 
-        <p class="view"><a href="https://github.com/vaibhavpandeyvpz/tez">View the Project on GitHub <small>vaibhavpandeyvpz/tez</small></a></p>
+        <section id="downloads">
+          <a href="https://github.com/vaibhavpandeyvpz/tez/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/vaibhavpandeyvpz/tez/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/vaibhavpandeyvpz/tez" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
 
-
-        <ul>
-          <li><a href="https://github.com/vaibhavpandeyvpz/tez/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/vaibhavpandeyvpz/tez/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/vaibhavpandeyvpz/tez">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
+    <div class="container">
+      <section id="main_content">
         <h1>
 <a id="vaibhavpandeyvpztez" class="anchor" href="#vaibhavpandeyvpztez" aria-hidden="true"><span class="octicon octicon-link"></span></a>vaibhavpandeyvpz/tez</h1>
 
-<p>Clean &amp; lightweight regex-based router implementation in PHP with support for reverse URL generation.</p>
+<p>Framework agnostic, lightweight regex-based router implementation in PHP with support for reverse URL generation.</p>
 
 <p><a href="https://travis-ci.org/vaibhavpandeyvpz/tez"><img src="https://img.shields.io/travis/vaibhavpandeyvpz/tez/master.svg?style=flat-square" alt="Build Status"></a></p>
 
@@ -41,32 +41,71 @@
 <div class="highlight highlight-source-shell"><pre>composer require vaibhavpandeyvpz/tez</pre></div>
 
 <h2>
-<a id="testing" class="anchor" href="#testing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Testing</h2>
-
-<div class="highlight highlight-source-shell"><pre>vendor/bin/phpunit</pre></div>
-
-<h2>
-<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+<a id="routing" class="anchor" href="#routing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Routing</h2>
 
 <div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$router</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">Vaibhav\Tez\</span><span class="pl-c1">Router</span>();</span>
 <span class="pl-s1"></span>
-<span class="pl-s1"><span class="pl-smi">$router</span><span class="pl-k">-&gt;</span>get(<span class="pl-s"><span class="pl-pds">'</span>/<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>IndexCtrl@index<span class="pl-pds">'</span></span>);</span>
-<span class="pl-s1"></span>
-<span class="pl-s1"><span class="pl-smi">$router</span><span class="pl-k">-&gt;</span>group(<span class="pl-s"><span class="pl-pds">'</span>/user<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> ()</span>
+<span class="pl-s1"><span class="pl-smi">$router</span><span class="pl-k">-&gt;</span>get(<span class="pl-s"><span class="pl-pds">'</span>/<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> ()</span>
 <span class="pl-s1">{</span>
-<span class="pl-s1">    <span class="pl-c">/** @var Vaibhav\Tez\Router $this */</span></span>
-<span class="pl-s1">    <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>get(<span class="pl-s"><span class="pl-pds">'</span>/{name}<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">$name</span>)</span>
-<span class="pl-s1">    {</span>
-<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-c1">sprintf</span>(<span class="pl-s"><span class="pl-pds">'</span>Hello %s!<span class="pl-pds">'</span></span>, <span class="pl-smi">$name</span>);</span>
-<span class="pl-s1">    }, <span class="pl-s"><span class="pl-pds">'</span>home<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1">    <span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">'</span>Home<span class="pl-pds">'</span></span>;</span>
+<span class="pl-s1">}, <span class="pl-s"><span class="pl-pds">'</span>home<span class="pl-pds">'</span></span>);</span>
 <span class="pl-s1"></span>
-<span class="pl-s1">    <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>get(<span class="pl-s"><span class="pl-pds">'</span>/{name}/{no:[0-9]+}<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">$name</span>, <span class="pl-smi">$no</span>)</span>
+<span class="pl-s1"><span class="pl-smi">$router</span><span class="pl-k">-&gt;</span>get(<span class="pl-s"><span class="pl-pds">'</span>/hello/{name}<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">$name</span>)</span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-k">return</span> <span class="pl-c1">sprintf</span>(<span class="pl-s"><span class="pl-pds">'</span>Hello %s!<span class="pl-pds">'</span></span>, <span class="pl-smi">$name</span>);</span>
+<span class="pl-s1">}, <span class="pl-s"><span class="pl-pds">'</span>hello<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$router</span><span class="pl-k">-&gt;</span>get(<span class="pl-s"><span class="pl-pds">'</span>/hi/{name}/{num:[0-9]+}<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">$name</span>, <span class="pl-smi">$no</span>)</span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-k">return</span> <span class="pl-c1">sprintf</span>(<span class="pl-s"><span class="pl-pds">'</span>Hi %s. You are no. %d!<span class="pl-pds">'</span></span>, <span class="pl-smi">$name</span>, <span class="pl-smi">$no</span>);</span>
+<span class="pl-s1">}, <span class="pl-s"><span class="pl-pds">'</span>hi<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$router</span><span class="pl-k">-&gt;</span>group(<span class="pl-s"><span class="pl-pds">'</span>/group<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> ()</span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">     * Group</span></span>
+<span class="pl-s1"><span class="pl-c">     *</span></span>
+<span class="pl-s1"><span class="pl-c">     * <span class="pl-k">@var</span> $this Vaibhav\Tez\Router</span></span>
+<span class="pl-s1"><span class="pl-c">     */</span></span>
+<span class="pl-s1">    <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>get(<span class="pl-s"><span class="pl-pds">'</span>/<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> () {}, <span class="pl-s"><span class="pl-pds">'</span>g-home<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>get(<span class="pl-s"><span class="pl-pds">'</span>/one/{name}<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">$name</span>) { <span class="pl-k">...</span> }, <span class="pl-s"><span class="pl-pds">'</span>g-one<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>get(<span class="pl-s"><span class="pl-pds">'</span>/two/{name}<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">$name</span>) { <span class="pl-k">...</span> }, <span class="pl-s"><span class="pl-pds">'</span>g-two<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>group(<span class="pl-s"><span class="pl-pds">'</span>/sub<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> ()</span>
 <span class="pl-s1">    {</span>
-<span class="pl-s1">        <span class="pl-k">return</span> <span class="pl-c1">sprintf</span>(<span class="pl-s"><span class="pl-pds">'</span>Hello %s. You are no. %d!<span class="pl-pds">'</span></span>, <span class="pl-smi">$name</span>, <span class="pl-smi">$no</span>);</span>
+<span class="pl-s1">        <span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c">         * Nested group</span></span>
+<span class="pl-s1"><span class="pl-c">         *</span></span>
+<span class="pl-s1"><span class="pl-c">         * <span class="pl-k">@var</span> $this Vaibhav\Tez\Router</span></span>
+<span class="pl-s1"><span class="pl-c">         */</span></span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>get(<span class="pl-s"><span class="pl-pds">'</span>/<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> () { <span class="pl-k">...</span> }, <span class="pl-s"><span class="pl-pds">'</span>sg-home<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>get(<span class="pl-s"><span class="pl-pds">'</span>/one/{name}<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">$name</span>) { <span class="pl-k">...</span> }, <span class="pl-s"><span class="pl-pds">'</span>sg-one<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>get(<span class="pl-s"><span class="pl-pds">'</span>/two/{name}<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">$name</span>) { <span class="pl-k">...</span> }, <span class="pl-s"><span class="pl-pds">'</span>sg-two<span class="pl-pds">'</span></span>);</span>
 <span class="pl-s1">    });</span>
-<span class="pl-s1">});</span>
+<span class="pl-s1">});</span></pre></div>
+
+<h2>
+<a id="generation" class="anchor" href="#generation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Generation</h2>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$router</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">Vaibhav\Tez\</span><span class="pl-c1">Router</span>();</span>
 <span class="pl-s1"></span>
-<span class="pl-s1"><span class="pl-c">// $path = $router-&gt;generate('home', ['name' =&gt; 'me']);</span></span>
+<span class="pl-s1"><span class="pl-c">// Setup routes...</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$path</span> <span class="pl-k">=</span> <span class="pl-smi">$router</span><span class="pl-k">-&gt;</span>generate(<span class="pl-s"><span class="pl-pds">'</span>hi<span class="pl-pds">'</span></span>, [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>me<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>no<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">1</span></span>
+<span class="pl-s1">]);</span></pre></div>
+
+<h2>
+<a id="dispatching" class="anchor" href="#dispatching" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dispatching</h2>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$router</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-c1">Vaibhav\Tez\</span><span class="pl-c1">Router</span>();</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">// Setup routes...</span></span>
 <span class="pl-s1"></span>
 <span class="pl-s1"><span class="pl-smi">$path</span> <span class="pl-k">=</span> <span class="pl-c1">isset</span>(<span class="pl-smi">$_SERVER</span>[<span class="pl-s"><span class="pl-pds">'</span>PATH_INFO<span class="pl-pds">'</span></span>]) ? <span class="pl-smi">$_SERVER</span>[<span class="pl-s"><span class="pl-pds">'</span>PATH_INFO<span class="pl-pds">'</span></span>] : <span class="pl-s"><span class="pl-pds">'</span>/<span class="pl-pds">'</span></span>;</span>
 <span class="pl-s1"></span>
@@ -88,12 +127,8 @@
 
 <p>See <a href="https://github.com/vaibhavpandeyvpz/tez/blob/master/LICENSE.md">LICENSE.md</a> file.</p>
       </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/vaibhavpandeyvpz">vaibhavpandeyvpz</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
+
               <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
