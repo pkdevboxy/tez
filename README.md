@@ -24,31 +24,36 @@ $router->get('/hello/{name}', function ($name)
     return sprintf('Hello %s!', $name);
 }, 'hello');
 
-$router->get('/hello/{name}/{num:[0-9]+}', function ($name, $no)
+$router->get('/hi/{name}/{num:[0-9]+}', function ($name, $no)
 {
-    return sprintf('Hello %s. You are no. %d!', $name, $no);
-}, 'hello-2');
+    return sprintf('Hi %s. You are no. %d!', $name, $no);
+}, 'hi');
 
 $router->group('/group', function ()
 {
     /**
      * Group
      *
-     * @var $this Router
+     * @var $this Vaibhav\Tez\Router
      */
     $this->get('/', function () {}, 'g-home');
-    $this->get('/one/{name}', function () {}, 'g-one');
-    $this->get('/two/{name}', function () {}, 'g-two');
+
+    $this->get('/one/{name}', function ($name) { ... }, 'g-one');
+
+    $this->get('/two/{name}', function ($name) { ... }, 'g-two');
+
     $this->group('/sub', function ()
     {
         /**
          * Nested group
          *
-         * @var $this Router
+         * @var $this Vaibhav\Tez\Router
          */
-        $this->get('/', function () {}, 'sg-home');
-        $this->get('/one/{name}', function () {}, 'sg-one');
-        $this->get('/two/{name}', function () {}, 'sg-two');
+        $this->get('/', function () { ... }, 'sg-home');
+
+        $this->get('/one/{name}', function ($name) { ... }, 'sg-one');
+
+        $this->get('/two/{name}', function ($name) { ... }, 'sg-two');
     });
 });
 ```
@@ -56,7 +61,11 @@ $router->group('/group', function ()
 Generation
 ------
 ```php
-$path = $router->generate('hello-2', [
+$router = new Vaibhav\Tez\Router();
+
+// Setup routes...
+
+$path = $router->generate('hi', [
     'name' => 'me',
     'no' => 1
 ]);
@@ -65,6 +74,10 @@ $path = $router->generate('hello-2', [
 Dispatching
 ------
 ```php
+$router = new Vaibhav\Tez\Router();
+
+// Setup routes...
+
 $path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
 
 $route = $router->match($path);

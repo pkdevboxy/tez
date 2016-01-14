@@ -20,22 +20,22 @@ class RouterTest extends PHPUnit_Framework_TestCase
         {
             return sprintf('Hello %s!', $name);
         }, 'hello');
-        $this->router->get('/hello/{name}/{num:[0-9]+}', function ($name, $no)
+        $this->router->get('/hi/{name}/{num:[0-9]+}', function ($name, $no)
         {
-            return sprintf('Hello %s. You are no. %d!', $name, $no);
+            return sprintf('Hi %s. You are no. %d!', $name, $no);
         });
         $this->router->group('/group', function ()
         {
             /** @var $this Router */
             $this->get('/', function () {}, 'g-home');
-            $this->get('/one/{name}', function () {}, 'g-one');
-            $this->get('/two/{name}', function () {}, 'g-two');
+            $this->get('/one/{name}', function ($name) {}, 'g-one');
+            $this->get('/two/{name}', function ($name) {}, 'g-two');
             $this->group('/sub', function ()
             {
                 /** @var $this Router */
                 $this->get('/', function () {}, 'sg-home');
-                $this->get('/one/{name}', function () {}, 'sg-one');
-                $this->get('/two/{name}', function () {}, 'sg-two');
+                $this->get('/one/{name}', function ($name) {}, 'sg-one');
+                $this->get('/two/{name}', function ($name) {}, 'sg-two');
             });
         });
     }
@@ -56,7 +56,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf('Vaibhav\\Tez\\Route', $this->router->match('/'));
         $this->assertInstanceOf('Vaibhav\\Tez\\Route', $this->router->match('/hello/me'));
-        $this->assertInstanceOf('Vaibhav\\Tez\\Route', $r = $this->router->match('/hello/me/1'));
+        $this->assertInstanceOf('Vaibhav\\Tez\\Route', $r = $this->router->match('/hi/me/1'));
         $this->assertTrue($r->allows('GET'));
         $this->assertFalse($r->allows('POST'));
     }
