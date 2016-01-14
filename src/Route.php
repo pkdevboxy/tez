@@ -1,127 +1,109 @@
-<?php
-
-namespace Tez;
+<?php namespace Vaibhav\Tez;
 
 class Route
 {
-    const REGEX_PARAM = '`{([\w]+)(?:(?::(.*?))?)}`';
+    const REGEX_PARAM = '~{([\w]+)(?:(?::(.*?))?)}~';
 
     /**
      * @var array
      */
-    private $filters = array(
-        '*'     => '.*?',
-        'alpha' => '[a-zA-Z0-9]+}',
-        'hex'   => '[a-fA-F0-9]+}',
-        'int'   => '[0-9]+'
-    );
-
-    /**
-     * @var array
-     */
-    private $methods;
-
-    /**
-     * @var array
-     */
-    private $parameters = array();
-
-    /**
-     * @var array
-     */
-    private $params = array();
-
-    /**
-     * @var string
-     */
-    private $path;
+    private $attributes = [];
 
     /**
      * @var mixed
      */
-    private $target;
+    private $handler;
 
     /**
-     * Route constructor.
-     * @param string $path
-     * @param mixed $target
+     * @var array
      */
-    function __construct($path, $target)
-    {
-        $this->path = $path;
-        $this->target = $target;
-    }
+    private $names = [];
 
     /**
-     * @param string $name
+     * @var string
+     */
+    private $pattern;
+
+    /**
+     * @var array
+     */
+    private $verbs;
+
+    /**
      * @param string $pattern
-     * @return $this
+     * @param mixed $handler
      */
-    public function addFilter($name, $pattern)
+    public function __construct($pattern, $handler)
     {
-        $this->filters[$name] = $pattern;
-        return $this;
+        $this->pattern = $pattern;
+        $this->handler = $handler;
+    }
+
+    /**
+     * @param string $verb
+     *
+     * @return Route
+     */
+    public function allow($verb)
+    {
+        $this->verbs[] = $verb;
+    }
+
+    /**
+     * @param string $verb
+     *
+     * @return bool
+     */
+    public function allows($verb)
+    {
+        return empty($this->verbs) || in_array($verb, $this->verbs);
     }
 
     /**
      * @return array
      */
-    public function getMethods()
+    public function attributes()
     {
-        return $this->methods;
+        return $this->attributes;
     }
 
     /**
-     * @return array
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
+     * @param array $matches
      * @return string
      */
-    public function getPath()
+    private function compile(array $matches)
     {
-        return $this->path;
-    }
-
-    public function getRegex()
-    {
-        return preg_replace_callback(self::REGEX_PARAM, array($this, 'getRegexReplacement'), $this->path);
-    }
-
-    private function getRegexReplacement(array $match)
-    {
-        $this->params[] = $match[1];
-        if (isset($match[2]) && !empty($match[2])) {
-            if (isset($this->filters[$match[2]])) {
-                $regex = $this->filters[$match[2]];
-            } else {
-                $regex = $match[2];
-            }
-            return "(?P<{$match[1]}>{$regex})";
+        $this->names[] = $matches[1];
+        if (isset($matches[2]) && !empty($matches[2])) {
+            return "(?P<{$matches[1]}>{$matches[2]})";
         } else {
-            return "(?P<{$match[1]}>[\\w-%]+)";
+            return "(?P<{$matches[1]}>[\\w-_%]+)";
         }
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function generate(array $params)
+    {
+        return preg_replace_callback(
+            self::REGEX_PARAM,
+            function (array $matches) use ($params)
+            {
+                return $params[$matches[1]];
+            },
+            $this->pattern
+        );
     }
 
     /**
      * @return mixed
      */
-    public function getTarget()
+    public function handler()
     {
-        return $this->target;
-    }
-
-    /**
-     * @param string $method
-     * @return bool
-     */
-    public function isAllowed($method)
-    {
-        return empty($this->methods) || in_array($method, $this->methods);
+        return $this->handler;
     }
 
     /**
@@ -130,31 +112,26 @@ class Route
      */
     public function matches($path)
     {
-        if (preg_match("`^{$this->getRegex()}$`", $path, $matches))
+        $regex = preg_replace_callback(
+            self::REGEX_PARAM,
+            [$this, 'compile'],
+            $this->pattern
+        );
+        if (preg_match("~^{$regex}$~", $path, $matches))
         {
-            foreach ($this->params as $k) {
-                $this->parameters[$k] = $matches[$k];
+            foreach ($this->names as $k) {
+                $this->attributes[$k] = $matches[$k];
             }
             return true;
         }
         return false;
     }
 
-    public function reverse(array $params)
-    {
-        return preg_replace_callback(self::REGEX_PARAM, function (array $match) use ($params)
-        {
-            return $params[$match[1]];
-        }, $this->path);
-    }
-
     /**
-     * @param string $method
-     * @return $this
+     * @param string $prefix
      */
-    public function setAllowed($method)
+    public function prefix($prefix)
     {
-        $this->methods[] = $method;
-        return $this;
+        $this->pattern = sprintf('/%s/%s', trim($prefix, '/'), trim($this->pattern, '/'));
     }
 }

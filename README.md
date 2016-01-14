@@ -1,5 +1,5 @@
 # vaibhavpandeyvpz/tez
-Clean & lightweight router implementation in PHP with support for reverse URL generation.
+Clean & lightweight regex-based router implementation in PHP with support for reverse URL generation.
 
 [![Build Status](https://img.shields.io/travis/vaibhavpandeyvpz/tez/master.svg?style=flat-square)](https://travis-ci.org/vaibhavpandeyvpz/tez)
 
@@ -22,33 +22,33 @@ Usage
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$router = new Tez\Router();
+$router = new Vaibhav\Tez\Router();
 
-$router->get('/', 'HomeCtrl@index');
+$router->get('/', 'IndexCtrl@index');
 
-$router->group('/hi', function ()
+$router->group('/user', function ()
 {
-    /** @var Tez\Router $this */
+    /** @var Vaibhav\Tez\Router $this */
     $this->get('/{name}', function ($name)
     {
-        return sprintf('Hi %s!', $name);
-    });
+        return sprintf('Hello %s!', $name);
+    }, 'home');
 
-    $this->get('/{name}/{no:int}', function ($name, $no)
+    $this->get('/{name}/{no:[0-9]+}', function ($name, $no)
     {
-        return sprintf('Hi %s. You are no. %d!', $name, $no);
-    }, 'hi');
+        return sprintf('Hello %s. You are no. %d!', $name, $no);
+    });
 });
 
-// $path = $router->generate('hi', array('name' => 'Vaibhav', 'no' => 1));
+// $path = $router->generate('home', ['name' => 'me']);
 
 $path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
 
 $route = $router->match($path);
 
 if ($route !== false) {
-    if ($route->isAllowed($_SERVER['REQUEST_METHOD'])) {
-        $dispatcher = new Tez\Dispatcher();
+    if ($route->allows($_SERVER['REQUEST_METHOD'])) {
+        $dispatcher = new Vaibhav\Tez\Dispatcher();
         echo $dispatcher->dispatch($route);
     } else {
         header('HTTP/1.0 405 Method Not Allowed');

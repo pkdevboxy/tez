@@ -1,21 +1,18 @@
-<?php
-
-namespace Tez;
+<?php namespace Vaibhav\Tez;
 
 class Router
 {
     /**
      * @var string
      */
-    private $prefix;
+    protected $prefix;
 
     /**
      * @var Route[]
      */
-    private $routes = array();
+    protected $routes = [];
 
     /**
-     * Collector constructor.
      * @param string $prefix
      */
     function __construct($prefix = '/')
@@ -24,142 +21,90 @@ class Router
     }
 
     /**
-     * @param string $path
-     * @param mixed $target
-     * @param null|string $name
-     * @return Route
+     * @param string $pattern
+     * @param mixed $handler
+     * @param string $name
+     *
+     * @return \Vaibhav\Tez\Route
      */
-    public function any($path, $target, $name = null)
+    public function any($pattern, $handler, $name = null)
     {
-        $r = new Route($this->prefix . trim($path, '/'), $target);
-        if ($name == null) {
-            $this->routes[] = $r;
-        } else {
-            $this->routes[$name] = $r;
-        }
-        return $r;
-    }
-
-    /**
-     * @param string $path
-     * @param mixed $target
-     * @param null|string $name
-     * @return Route
-     */
-    public function delete($path, $target, $name = null)
-    {
-        $r = $this->any($path, $target, $name);
-        $r->setAllowed('DELETE');
-        return $r;
+        return $this->map(null, new Route($pattern, $handler), $name);
     }
 
     /**
      * @param string $name
      * @param array $params
-     * @return mixed|null
+     * @return string
      */
     public function generate($name, array $params = array())
     {
         if (isset($this->routes[$name])) {
-            return $this->routes[$name]->reverse($params);
+            return $this->routes[$name]->generate($params);
         }
         return null;
     }
 
     /**
-     * @param string $path
-     * @param mixed $target
-     * @param null|string $name
-     * @return Route
+     * @param string $pattern
+     * @param mixed $handler
+     * @param string $name
+     *
+     * @return \Vaibhav\Tez\Route
      */
-    public function get($path, $target, $name = null)
+    public function get($pattern, $handler, $name = null)
     {
-        $r = $this->any($path, $target, $name);
-        $r->setAllowed('GET');
-        return $r;
+        return $this->map('GET', new Route($pattern, $handler), $name);
     }
 
     /**
-     * @param $prefix
-     * @param \Closure $callback
+     * @param string $prefix
+     * @param \Closure $closure
      */
-    public function group($prefix, \Closure $callback)
+    public function group($prefix, \Closure $closure)
     {
-        $old = $this->prefix;
-        $this->prefix = $this->prefix . trim($prefix, '/') . '/';
-        $callback = $callback->bindTo($this);
+        $original = $this->prefix;
+        $this->prefix = sprintf('/%s/%s', trim($original, '/'), trim($prefix, '/'));
+        $callback = $closure->bindTo($this);
         $callback();
-        $this->prefix = $old;
+        $this->prefix = $original;
     }
 
     /**
-     * @param string $path
-     * @param mixed $target
-     * @param null|string $name
+     * @param string $pattern
+     * @param mixed $handler
+     * @param string $name
+     *
+     * @return \Vaibhav\Tez\Route
+     */
+    public function head($pattern, $handler, $name = null)
+    {
+        return $this->map('HEAD', new Route($pattern, $handler), $name);
+    }
+
+    /**
+     * @param string $verb
+     * @param Route $route
+     * @param string $name
      * @return Route
      */
-    public function head($path, $target, $name = null)
+    public function map($verb, Route $route, $name = null)
     {
-        $r = $this->any($path, $target, $name);
-        $r->setAllowed('HEAD');
-        return $r;
+        $route->allow($verb);
+        if ($this->prefix !== '/') {
+            $route->prefix($this->prefix);
+        }
+        if ($name == null) {
+            $this->routes[] = $route;
+        } else {
+            $this->routes[$name] = $route;
+        }
+        return $route;
     }
 
     /**
      * @param string $path
-     * @param mixed $target
-     * @param null|string $name
      * @return Route
-     */
-    public function options($path, $target, $name = null)
-    {
-        $r = $this->any($path, $target, $name);
-        $r->setAllowed('OPTIONS');
-        return $r;
-    }
-
-    /**
-     * @param string $path
-     * @param mixed $target
-     * @param null|string $name
-     * @return Route
-     */
-    public function patch($path, $target, $name = null)
-    {
-        $r = $this->any($path, $target, $name);
-        $r->setAllowed('PATCH');
-        return $r;
-    }
-
-    /**
-     * @param string $path
-     * @param mixed $target
-     * @param null|string $name
-     * @return Route
-     */
-    public function post($path, $target, $name = null)
-    {
-        $r = $this->any($path, $target, $name);
-        $r->setAllowed('POST');
-        return $r;
-    }
-
-    /**
-     * @param string $path
-     * @param mixed $target
-     * @param null|string $name
-     * @return Route
-     */
-    public function put($path, $target, $name = null)
-    {
-        $r = $this->any($path, $target, $name);
-        $r->setAllowed('PUT');
-        return $r;
-    }
-
-    /**
-     * @param string $path
-     * @return bool|Route
      */
     public function match($path)
     {
@@ -168,6 +113,54 @@ class Router
                 return $route;
             }
         }
-        return false;
+        return null;
+    }
+
+    /**
+     * @param string $pattern
+     * @param mixed $handler
+     * @param string $name
+     *
+     * @return \Vaibhav\Tez\Route
+     */
+    public function options($pattern, $handler, $name = null)
+    {
+        return $this->map('OPTIONS', new Route($pattern, $handler), $name);
+    }
+
+    /**
+     * @param string $pattern
+     * @param mixed $handler
+     * @param string $name
+     *
+     * @return \Vaibhav\Tez\Route
+     */
+    public function patch($pattern, $handler, $name = null)
+    {
+        return $this->map('PATCH', new Route($pattern, $handler), $name);
+    }
+
+    /**
+     * @param string $pattern
+     * @param mixed $handler
+     * @param string $name
+     *
+     * @return \Vaibhav\Tez\Route
+     */
+    public function post($pattern, $handler, $name = null)
+    {
+        return $this->map('POST', new Route($pattern, $handler), $name);
+    }
+
+    /**
+     * @param string $pattern
+     * @param mixed $handler
+     * @param string $name
+     *
+     * @return \Vaibhav\Tez\Route
+     */
+    public function put($pattern, $handler, $name = null)
+    {
+        return $this->map('PUT', new Route($pattern, $handler), $name);
     }
 }
