@@ -54,9 +54,9 @@ class RouterTest extends PHPUnit_Framework_TestCase
 
     public function testMatching()
     {
-        $this->assertInstanceOf(Route::class, $this->router->match('/'));
-        $this->assertInstanceOf(Route::class, $this->router->match('/hello/me'));
-        $this->assertInstanceOf(Route::class, $r = $this->router->match('/hello/me/1'));
+        $this->assertInstanceOf('Vaibhav\\Tez\\Route', $this->router->match('/'));
+        $this->assertInstanceOf('Vaibhav\\Tez\\Route', $this->router->match('/hello/me'));
+        $this->assertInstanceOf('Vaibhav\\Tez\\Route', $r = $this->router->match('/hello/me/1'));
         $this->assertTrue($r->allows('GET'));
         $this->assertFalse($r->allows('POST'));
     }
