@@ -94,6 +94,37 @@ if ($route !== null) {
 }
 ```
 
+Dispatching (Controller > Action)
+------
+```php
+$router = new Vaibhav\Tez\Router();
+
+$router->get('/', 'HomeCtrl#index');
+
+// Setup more routes ...
+
+$path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
+
+$route = $router->match($path);
+
+if ($route !== null) {
+    if ($route->allows($_SERVER['REQUEST_METHOD'])) {
+        $dispatcher = new Vaibhav\Tez\Dispatcher(function ($handler)
+        {
+            if (is_string($handler) && (strpos($handler, '#') > 0)) {
+                list ($controller, $action) = explode('#', $handler);
+                return [new $controller(), $action];
+            }
+        });
+        echo $dispatcher->dispatch($route);
+    } else {
+        header('HTTP/1.0 405 Method Not Allowed');
+    }
+} else {
+    header('HTTP/1.0 404 Not Found');
+}
+```
+
 License
 ------
 See [LICENSE.md](https://github.com/vaibhavpandeyvpz/tez/blob/master/LICENSE.md) file.

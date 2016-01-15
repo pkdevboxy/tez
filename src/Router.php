@@ -34,13 +34,14 @@ class Router
 
     /**
      * @param string $name
-     * @param array $params
+     * @param array $attributes
+     *
      * @return string
      */
-    public function generate($name, array $params = array())
+    public function generate($name, array $attributes = [])
     {
         if (isset($this->routes[$name])) {
-            return $this->routes[$name]->generate($params);
+            return $this->routes[$name]->generate($attributes);
         }
         return null;
     }

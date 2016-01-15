@@ -12,4 +12,3 @@ class DispatcherTest extends RouterTest
         $this->assertEquals('Hi me. You are no. 1!', $dispatcher->dispatch($this->router->match('/hi/me/1')));
     }
 }
-

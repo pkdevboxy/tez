@@ -2,7 +2,7 @@
 
 class Route
 {
-    const REGEX_PARAM = '~{([\w]+)(?:(?::(.*?))?)}~';
+    const REGEX_ATTR = '~{([\w]+)(?:(?::(.*?))?)}~';
 
     /**
      * @var array
@@ -82,17 +82,17 @@ class Route
     }
 
     /**
-     * @param array $params
+     * @param array $attributes
      *
-     * @return mixed
+     * @return string
      */
-    public function generate(array $params)
+    public function generate(array $attributes)
     {
         return preg_replace_callback(
-            self::REGEX_PARAM,
-            function (array $matches) use ($params)
+            self::REGEX_ATTR,
+            function (array $matches) use ($attributes)
             {
-                return $params[$matches[1]];
+                return $attributes[$matches[1]];
             },
             $this->pattern
         );
@@ -112,12 +112,7 @@ class Route
      */
     public function matches($path)
     {
-        $regex = preg_replace_callback(
-            self::REGEX_PARAM,
-            [$this, 'compile'],
-            $this->pattern
-        );
-        if (preg_match("~^{$regex}$~", $path, $matches))
+        if (preg_match("~^{$this->regex()}$~", $path, $matches))
         {
             foreach ($this->names as $k) {
                 $this->attributes[$k] = $matches[$k];
@@ -128,10 +123,30 @@ class Route
     }
 
     /**
+     * @return string
+     */
+    public function pattern()
+    {
+        return $this->pattern;
+    }
+
+    /**
      * @param string $prefix
      */
     public function prefix($prefix)
     {
         $this->pattern = sprintf('/%s/%s', trim($prefix, '/'), trim($this->pattern, '/'));
+    }
+
+    /**
+     * @return string
+     */
+    public function regex()
+    {
+        return preg_replace_callback(
+            self::REGEX_ATTR,
+            [$this, 'compile'],
+            $this->pattern
+        );
     }
 }

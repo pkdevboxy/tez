@@ -3,44 +3,32 @@
 class Dispatcher
 {
     /**
-     * @var string
-     */
-    private $delimiter;
-
-    /**
      * @var callable
      */
-    private $factory;
+    private $resolver;
 
     /**
-     * Dispatcher constructor.
-     * @param string $delimiter
-     * @param callable $factory
+     * @param callable $resolver
      */
-    function __construct($delimiter = '@', callable $factory = null)
+    function __construct(callable $resolver = null)
     {
-        $this->delimiter = $delimiter;
-        $this->factory = $factory;
+        $this->resolver = $resolver;
     }
 
     /**
      * @param Route $route
+     *
      * @return mixed
      */
     public function dispatch(Route $route)
     {
-        $target = $route->handler();
-        if (is_string($target) && (strpos($target, $this->delimiter) > 0)) {
-            list ($controller, $action) = explode($this->delimiter, $target);
-            if (is_callable($this->factory)) {
-                $target = call_user_func($this->factory, $controller, $action);
-            } else {
-                $target = [new $controller(), $action];
-            }
+        $handler = $route->handler();
+        if (!is_callable($handler) && ($this->resolver !== null)) {
+            $handler = call_user_func($this->resolver, $handler);
         }
-        if (is_callable($target)) {
-            return call_user_func_array($target, $route->attributes());
+        if (is_callable($handler)) {
+            return call_user_func_array($handler, $route->attributes());
         }
-        return null;
+        throw new \ErrorException("Target specified for '{$route->pattern()}' cannot be called");
     }
 }
